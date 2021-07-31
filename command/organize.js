@@ -5,11 +5,12 @@ let types ={    //types of files that can be organized
     app: ['exe', 'pkg', 'dmg', 'deb'],
     webpages:['html', 'webp'],
     images: ['png','jpeg','jpg','gif','bmp'],
-    'Other files and folders':[]
+    others:[]
 };
 
 var fs = require('fs');
 var path = require('path');
+var count = 0 //for counting number of files organized
 
 function createFolders(src,srcFiles){ //creating directories/folders to organize
     for (let i in types){       //creating folders/directories in 'src'
@@ -30,15 +31,7 @@ function createFolders(src,srcFiles){ //creating directories/folders to organize
         
     }
 }
-
-function org(src){  //function for organizing the files at give path (i.e. at src)
-    
-    let count = 0 //for counting number of files organized
-    console.log("..........ORAGANIZING FILES..........")    
-    let srcFiles=fs.readdirSync(path.join(src));
-
-    createFolders(src,srcFiles)
-    
+function copyFiles(src,srcFiles, inside){
     for(let i=0;i<srcFiles.length;i++){     //for iterating through source files
         let copied=false;
         for(let j in types){    //for iterating through folder types to decide which folder to put the file into
@@ -53,19 +46,27 @@ function org(src){  //function for organizing the files at give path (i.e. at sr
                     copied=true;
                     break;
                 }
-            }
-        
+            }        
         }
-        // if(!copied){  
-        //     let destFilePath = path.join(src,"Other files and folders", srcFiles[i])
-        //     let srcFilePath = path.join(src, srcFiles[i])
-        //     fs.copyFileSync(srcFilePath,destFilePath)   //copy the files to destination
-        //     count+=1
-        //     console.log(`...${count} file(s) organized`)
-        //     fs.unlinkSync(srcFilePath)    //deleting file from source
-        //     copied=true;
-        // }
+        if(!copied){  
+            let destFilePath2 = path.join(src,"others", srcFiles[i])
+            let srcFilePath2 = path.join(src, srcFiles[i])
+            fs.copyFileSync(srcFilePath2,destFilePath2)   //copy the files to destination
+            count+=1
+            console.log(`...${count} file(s) organized`)
+            fs.unlinkSync(srcFilePath2)    //deleting file from source
+            copied=true;
+        }
     }
+}
+function org(src){  //function for organizing the files at give path (i.e. at src)
+    
+    console.log("..........ORAGANIZING FILES..........")    
+    let srcFiles=fs.readdirSync(path.join(src));
+
+    createFolders(src,srcFiles)
+    copyFiles(src,srcFiles, '')
+    
     
 }
 
