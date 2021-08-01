@@ -30,6 +30,9 @@ switch (cmd){
     case "help":
         helpObj.helpFxn()
         break;
+    case "deepOrganize":
+        organizeObj.deepOrganizeFxn(inputArr[1])
+        break;
     default: 
         console.log('ERR!!!\nIllegal command.\n Kindly enter correct command.')
         break;
